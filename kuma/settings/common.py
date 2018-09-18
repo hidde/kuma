@@ -442,6 +442,7 @@ _CONTEXT_PROCESSORS = (
     'kuma.core.context_processors.next_url',
 
     'constance.context_processors.config',
+    'kuma.contributions.context_processors.global_contribution_form',
 )
 
 
@@ -908,7 +909,7 @@ PIPELINE_JS = {
             'js/auth.js',
             'js/highlight.js',
             'js/wiki-compat-trigger.js',
-            'js/lang-switcher.js'
+            'js/lang-switcher.js',
         ),
         'output_filename': 'build/js/main.js',
     },
@@ -951,6 +952,7 @@ PIPELINE_JS = {
     'contribute': {
         'source_filenames': (
             'js/contribution-handler.js',
+            'js/contribution-faq.js',
         ),
         'output_filename': 'build/js/contribute.js',
     },
@@ -1276,8 +1278,9 @@ CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND',
 CELERY_ACCEPT_CONTENT = ['pickle']
 
 CELERY_IMPORTS = (
-    'tidings.events',
+    'kuma.contributions.tasks',
     'kuma.search.tasks',
+    'tidings.events',
 )
 
 CELERY_ANNOTATIONS = {
@@ -1330,6 +1333,9 @@ CELERY_ROUTES = {
         'queue': 'mdn_emails'
     },
     'kuma.users.tasks.email_render_document_progress': {
+        'queue': 'mdn_emails'
+    },
+    'kuma.contributions.tasks.contribute_thank_you_email': {
         'queue': 'mdn_emails'
     },
     'kuma.wiki.tasks.send_first_edit_email': {
